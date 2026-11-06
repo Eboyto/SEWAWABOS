@@ -3,603 +3,282 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#05070f">
 <title>Dashboard — NexaPartner</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#05070f;--surface:rgba(18,22,38,.72);
-  --stroke:rgba(255,255,255,.07);--stroke-2:rgba(255,255,255,.14);
-  --text:#eef1f8;--muted:#7d869e;--muted-2:#4e5670;
-  --accent:#6d5efc;--accent-2:#00d4ff;--gold:#ffb020;
-  --green:#22c55e;--red:#ef4444;--warn:#ffc861;
-  --radius:20px;--sidebar-w:250px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;overflow-x:hidden}
-body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);
-  -webkit-font-smoothing:antialiased;line-height:1.5}
-.hidden{display:none!important}
-.mono{font-family:'JetBrains Mono',monospace}
-
-.bg-layer{position:fixed;inset:0;z-index:-2;overflow:hidden}
-.bg-layer::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(1100px 600px at 15% -10%, rgba(109,94,252,.22), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(0,212,255,.12), transparent 55%),
-    radial-gradient(800px 600px at 50% 115%, rgba(255,176,32,.08), transparent 60%),#05070f}
-.bg-layer::after{content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
-  background-size:56px 56px;
-  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 72%);
-  mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 72%)}
-.orb{position:fixed;border-radius:50%;filter:blur(100px);z-index:-1;pointer-events:none;opacity:.35}
-.orb-1{width:460px;height:460px;background:#5a45f0;top:-160px;left:-120px;animation:f1 18s ease-in-out infinite}
-.orb-2{width:380px;height:380px;background:#00b8e6;top:20%;right:-140px;animation:f2 22s ease-in-out infinite}
-@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,50px)}}
-@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,40px)}}
-
+:root{--bg:#05070f;--surf:rgba(18,22,38,.72);--stroke:rgba(255,255,255,.08);--text:#eef1f8;--muted:#7d869e;--acc:#6d5efc;--acc2:#00d4ff;--gold:#ffb020;--green:#22c55e;--red:#ef4444;--sw:220px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(1100px 600px at 15% -10%,rgba(109,94,252,.22),transparent 60%),radial-gradient(900px 500px at 90% 10%,rgba(0,212,255,.12),transparent 55%),#05070f}
 .app{display:flex;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);padding:18px 12px;background:linear-gradient(180deg,rgba(10,12,22,.97),rgba(8,10,18,.99));border-right:1px solid var(--stroke);z-index:40;transition:transform .3s}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:0 6px 16px;border-bottom:1px solid var(--stroke);margin-bottom:14px}
+.sb-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(160deg,#7b6bff,#4a37e0);color:#fff}
+.sb-mark svg{width:17px;height:17px}
+.sb-name{font-size:12.5px;font-weight:800}.sb-name span{color:var(--acc2)}
+.sb-tag{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.sb-nav{display:flex;flex-direction:column;gap:2px}
+.nl{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;color:#8892a8;text-decoration:none;transition:.2s}
+.nl svg{width:15px;height:15px}
+.nl:hover{color:#fff;background:rgba(255,255,255,.04)}
+.nl.active{color:#fff;background:linear-gradient(90deg,rgba(109,94,252,.28),rgba(109,94,252,.08))}
+.nl.active svg{color:var(--acc2)}
+.sb-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--stroke)}
+.sb-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
+.sb-av{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:10.5px;color:#fff;background:linear-gradient(160deg,#7b6bff,#4a37e0)}
+.sb-info{flex:1;min-width:0}
+.sb-uname{font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-role{font-size:9px;color:var(--muted)}
+.sb-out{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid var(--stroke);color:var(--muted);cursor:pointer}
+.sb-out:hover{color:#ff8b8b;background:rgba(239,68,68,.1)}
+.sb-out svg{width:11px;height:11px}
 
-/* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:40;
-  display:flex;flex-direction:column;padding:22px 14px;
-  background:linear-gradient(180deg,rgba(10,12,22,.97),rgba(8,10,18,.99));
-  border-right:1px solid var(--stroke);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  transition:transform .35s cubic-bezier(.2,.9,.3,1)}
-.sidebar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;
-  background:linear-gradient(180deg,transparent,rgba(109,94,252,.35),transparent)}
-.sb-brand{display:flex;align-items:center;gap:12px;padding:0 8px 20px;border-bottom:1px solid var(--stroke);margin-bottom:18px}
-.sb-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto;
-  background:linear-gradient(160deg,#7b6bff,#4a37e0 55%,#2a1d9e);color:#fff;
-  box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 12px 26px -10px rgba(109,94,252,.95)}
-.sb-mark svg{width:20px;height:20px}
-.sb-name{font-size:14.5px;font-weight:800;letter-spacing:.2px}
-.sb-name span{color:var(--accent-2)}
-.sb-tag{font-size:9.5px;color:var(--muted);font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin-top:1px}
+.main{flex:1;margin-left:var(--sw);display:flex;flex-direction:column;min-width:0}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:rgba(6,8,16,.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--stroke)}
+.menu-tgl{display:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:#cfd6e6;cursor:pointer;place-items:center}
+.menu-tgl svg{width:15px;height:15px}
+.pt{font-size:14px;font-weight:800}.ps{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
+.tp{display:flex;align-items:center;gap:7px;padding:3px 9px 3px 3px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
+.tp-av{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:linear-gradient(160deg,#7b6bff,#4a37e0);font-weight:800;font-size:10px;color:#fff}
+.tp-name{font-size:10.5px;font-weight:700;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.sb-nav{flex:1;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
-.sb-nav::-webkit-scrollbar{width:4px}
-.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
-.nav-label{font-size:9.5px;font-weight:800;color:var(--muted-2);letter-spacing:1px;text-transform:uppercase;padding:10px 12px 6px}
-.nav-link{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:11px;cursor:pointer;
-  font-size:12.5px;font-weight:600;color:#8892a8;text-decoration:none;transition:.22s;position:relative}
-.nav-link svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
-.nav-link:hover{color:#fff;background:rgba(255,255,255,.04)}
-.nav-link.active{color:#fff;background:linear-gradient(90deg,rgba(109,94,252,.28),rgba(109,94,252,.08));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 22px -10px rgba(109,94,252,.8)}
-.nav-link.active::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;
-  background:linear-gradient(180deg,#8b7bff,#00d4ff);box-shadow:0 0 12px rgba(109,94,252,.9)}
-.nav-link.active svg{color:var(--accent-2);opacity:1}
-.nav-link .badge{margin-left:auto;min-width:17px;height:17px;padding:0 5px;
-  display:inline-flex;align-items:center;justify-content:center;border-radius:9px;
-  font-size:9.5px;font-weight:800;background:rgba(239,68,68,.2);color:#ff9a9a;
-  border:1px solid rgba(239,68,68,.35)}
-
-.sb-footer{padding-top:14px;border-top:1px solid var(--stroke);margin-top:10px}
-.sb-user{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:13px;
-  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
-  border:1px solid var(--stroke)}
-.sb-avatar{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;
-  font-weight:800;font-size:12px;color:#fff;background:linear-gradient(160deg,#7b6bff,#4a37e0);
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset}
-.sb-user-info{min-width:0;flex:1}
-.sb-user-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-user-role{font-size:10px;color:var(--muted);font-weight:600}
-.sb-logout{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;
-  background:rgba(255,255,255,.04);border:1px solid var(--stroke);color:var(--muted);cursor:pointer;transition:.2s}
-.sb-logout:hover{color:#ff8b8b;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.1)}
-.sb-logout svg{width:13px;height:13px}
-
-/* MAIN */
-.main{flex:1;margin-left:var(--sidebar-w);display:flex;flex-direction:column;min-width:0}
-
-.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:14px 26px;background:rgba(6,8,16,.75);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--stroke)}
-.top-left{display:flex;align-items:center;gap:12px;min-width:0}
-.menu-toggle{display:none;width:36px;height:36px;border-radius:10px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.04);color:#cfd6e6;cursor:pointer;place-items:center}
-.menu-toggle svg{width:17px;height:17px}
-.page-title{font-size:16px;font-weight:800;letter-spacing:-.3px}
-.page-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:1px}
-.top-profile{display:flex;align-items:center;gap:8px;padding:4px 11px 4px 4px;border-radius:11px;
-  background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
-.tp-avatar{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
-  background:linear-gradient(160deg,#7b6bff,#4a37e0);font-weight:800;font-size:11px;color:#fff}
-.tp-name{font-size:11.5px;font-weight:700;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.content{padding:24px 26px 80px;flex:1;max-width:1400px;width:100%;margin:0 auto}
-.view{display:none;animation:viewIn .45s cubic-bezier(.2,.9,.3,1.1) both}
+.content{padding:18px 20px 80px;max-width:1300px;width:100%;margin:0 auto}
+.view{display:none;animation:vi .4s cubic-bezier(.2,.9,.3,1.1) both}
 .view.active{display:block}
-@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes vi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.hidden{display:none!important}
 
-/* EARNING HERO */
-.earning-hero{position:relative;padding:30px;border-radius:24px;overflow:hidden;
-  background:linear-gradient(135deg,rgba(109,94,252,.18),rgba(0,212,255,.06) 50%,rgba(255,176,32,.08));
-  border:1px solid rgba(109,94,252,.32);margin-bottom:22px;
-  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 30px 60px -40px rgba(109,94,252,.8)}
-.earning-hero::before{content:'';position:absolute;top:-100px;right:-100px;width:280px;height:280px;border-radius:50%;
-  background:radial-gradient(circle,rgba(109,94,252,.35),transparent 65%);filter:blur(60px);animation:glow 8s ease-in-out infinite}
-@keyframes glow{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,20px)}}
-.earning-hero>*{position:relative;z-index:1}
-.eh-label{font-size:11.5px;font-weight:800;color:#c7bfff;letter-spacing:1.2px;text-transform:uppercase;
-  display:flex;align-items:center;gap:9px}
-.eh-label svg{width:15px;height:15px}
-.eh-amount{font-size:clamp(38px,7vw,54px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin:12px 0 8px;
-  background:linear-gradient(135deg,#fff,#c7bfff 40%,#00d4ff 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  transition:transform .2s;font-family:'JetBrains Mono',monospace}
-.eh-amount.tick{transform:scale(1.015)}
-.eh-currency{font-size:.5em;opacity:.6;letter-spacing:0;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif}
-.eh-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
-.eh-meta small{font-size:12px;color:var(--muted);font-weight:600}
-.rate-live{display:inline-flex;align-items:center;gap:6px;color:#6ee7a0;font-weight:800;font-size:11.5px;
-  padding:4px 10px;border-radius:7px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
-.rate-live::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;
-  animation:rp 1.4s infinite;box-shadow:0 0 0 0 rgba(34,197,94,.7)}
+.hero{padding:24px;border-radius:20px;background:linear-gradient(135deg,rgba(109,94,252,.18),rgba(0,212,255,.06) 50%,rgba(255,176,32,.08));border:1px solid rgba(109,94,252,.32);margin-bottom:18px}
+.hero-lbl{font-size:10.5px;font-weight:800;color:#c7bfff;letter-spacing:1.2px;text-transform:uppercase}
+.hero-amt{font-size:clamp(32px,6vw,44px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;margin:8px 0 4px;background:linear-gradient(135deg,#fff,#c7bfff 40%,#00d4ff);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:'JetBrains Mono',monospace}
+.hero-cur{font-size:.5em;opacity:.6;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
+.hero-meta{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px}
+.rate-live{display:inline-flex;align-items:center;gap:5px;color:#6ee7a0;font-weight:800;font-size:10.5px;padding:3px 8px;border-radius:6px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
+.rate-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#4ade80;animation:rp 1.4s infinite}
 @keyframes rp{70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-.rate-paused{display:inline-flex;align-items:center;gap:6px;color:#ffcf70;font-weight:800;font-size:11.5px;
-  padding:4px 10px;border-radius:7px;background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.25)}
-.rate-stopped{display:inline-flex;align-items:center;gap:6px;color:#7d869e;font-weight:800;font-size:11.5px;
-  padding:4px 10px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
+.rate-paused{color:#ffcf70;font-weight:800;font-size:10.5px;padding:3px 8px;border-radius:6px;background:rgba(255,176,32,.1);border:1px solid rgba(255,176,32,.25)}
 
-/* STAT CARDS */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:22px}
-.stat-card{position:relative;padding:20px;border-radius:18px;overflow:hidden;
-  background:var(--surface);backdrop-filter:blur(16px);
-  border:1px solid var(--stroke);
-  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 24px 48px -30px rgba(0,0,0,1)}
-.stat-card::after{content:'';position:absolute;top:-50px;right:-50px;width:140px;height:140px;border-radius:50%;
-  background:radial-gradient(circle,rgba(109,94,252,.28),transparent 70%);pointer-events:none}
-.stat-card.gold::after{background:radial-gradient(circle,rgba(255,176,32,.24),transparent 70%)}
-.stat-card.green::after{background:radial-gradient(circle,rgba(34,197,94,.22),transparent 70%)}
-.stat-card.cyan::after{background:radial-gradient(circle,rgba(0,212,255,.22),transparent 70%)}
-.stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.stat-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
-  background:linear-gradient(160deg,rgba(109,94,252,.22),rgba(109,94,252,.05));
-  border:1px solid rgba(109,94,252,.28);color:#a89cff}
-.stat-card.gold .stat-icon{background:linear-gradient(160deg,rgba(255,176,32,.22),rgba(255,176,32,.05));border-color:rgba(255,176,32,.28);color:#ffcf70}
-.stat-card.green .stat-icon{background:linear-gradient(160deg,rgba(34,197,94,.22),rgba(34,197,94,.05));border-color:rgba(34,197,94,.28);color:#6ee7a0}
-.stat-card.cyan .stat-icon{background:linear-gradient(160deg,rgba(0,212,255,.22),rgba(0,212,255,.05));border-color:rgba(0,212,255,.28);color:#6ee7ff}
-.stat-icon svg{width:17px;height:17px}
-.stat-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}
-.stat-value{font-size:22px;font-weight:800;letter-spacing:-.8px;line-height:1.15;margin-top:5px}
-.stat-value small{font-size:13px;font-weight:700;color:var(--muted)}
-.stat-foot{font-size:11px;color:var(--muted);font-weight:600;margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.pulse-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.pulse-dot.green{background:#22c55e;animation:pg 1.8s infinite}
-.pulse-dot.red{background:#ef4444;animation:pr 1.4s infinite}
-.pulse-dot.gold{background:#ffb020;animation:py 1.8s infinite}
-@keyframes pg{70%{box-shadow:0 0 0 9px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-@keyframes pr{70%{box-shadow:0 0 0 9px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
-@keyframes py{70%{box-shadow:0 0 0 9px rgba(255,176,32,0)}100%{box-shadow:0 0 0 0 rgba(255,176,32,0)}}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:11px;margin-bottom:16px}
+.stat{padding:14px;border-radius:14px;background:var(--surf);border:1px solid var(--stroke);position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(109,94,252,.22),transparent 70%)}
+.stat.gold::after{background:radial-gradient(circle,rgba(255,176,32,.2),transparent 70%)}
+.stat.green::after{background:radial-gradient(circle,rgba(34,197,94,.2),transparent 70%)}
+.stat.cyan::after{background:radial-gradient(circle,rgba(0,212,255,.2),transparent 70%)}
+.stat-lbl{font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}
+.stat-val{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-top:4px;line-height:1.15}
+.stat-val small{font-size:10px;color:var(--muted);font-weight:700}
+.stat-foot{font-size:10px;color:var(--muted);font-weight:600;margin-top:4px;display:flex;align-items:center;gap:4px}
+.pd{width:6px;height:6px;border-radius:50%;display:inline-block}
+.pd.green{background:#22c55e;animation:pg 1.8s infinite}
+.pd.red{background:#ef4444;animation:pr 1.4s infinite}
+.pd.gold{background:#ffb020;animation:py 1.8s infinite}
+@keyframes pg{70%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+@keyframes pr{70%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+@keyframes py{70%{box-shadow:0 0 0 6px rgba(255,176,32,0)}}
 
-/* PANELS */
-.panel{position:relative;border-radius:18px;padding:20px;
-  background:var(--surface);backdrop-filter:blur(16px);
-  border:1px solid var(--stroke);
-  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 48px -32px rgba(0,0,0,1);overflow:hidden;margin-bottom:18px}
-.panel::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.panel-title{font-size:13.5px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:9px}
-.panel-title svg{width:16px;height:16px;color:var(--accent-2)}
-.panel-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+.panel{padding:16px;border-radius:15px;background:var(--surf);border:1px solid var(--stroke);margin-bottom:14px;position:relative}
+.panel-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.panel-t{font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.panel-t svg{width:14px;height:14px;color:var(--acc2)}
+.panel-s{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
 
-/* WA CARD */
-.wa-card{position:relative;padding:18px;border-radius:16px;
-  background:linear-gradient(160deg,rgba(34,197,94,.08),rgba(18,22,38,.7));
-  border:1px solid rgba(34,197,94,.22)}
-.wa-card.danger{background:linear-gradient(160deg,rgba(239,68,68,.1),rgba(18,22,38,.7));border-color:rgba(239,68,68,.28)}
-.wa-card.warn{background:linear-gradient(160deg,rgba(255,176,32,.1),rgba(18,22,38,.7));border-color:rgba(255,176,32,.28)}
-.wa-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.wa-avatar{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto;
-  background:linear-gradient(160deg,rgba(34,197,94,.3),rgba(34,197,94,.08));
-  border:1px solid rgba(34,197,94,.35);color:#6ee7a0}
-.wa-avatar.danger{background:linear-gradient(160deg,rgba(239,68,68,.3),rgba(239,68,68,.08));border-color:rgba(239,68,68,.35);color:#ff9a9a}
-.wa-avatar.warn{background:linear-gradient(160deg,rgba(255,176,32,.3),rgba(255,176,32,.08));border-color:rgba(255,176,32,.35);color:#ffcf70}
-.wa-avatar svg{width:20px;height:20px}
-.wa-info{flex:1;min-width:0}
-.wa-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wa-phone{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:600;margin-top:1px}
-.wa-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:7px;
-  font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
-.wa-pill.connected{color:#6ee7a0;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.28)}
-.wa-pill.disconnected{color:#ff9a9a;background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.28)}
-.wa-pill.pairing{color:#ffcf70;background:rgba(255,176,32,.14);border:1px solid rgba(255,176,32,.28)}
-.wa-pill.none{color:#7d869e;background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
-.wa-meta{display:flex;gap:12px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--stroke)}
-.wa-meta-item{font-size:11px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px}
-.wa-meta-item b{color:#cfd6e6;font-weight:700}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:10px;font-weight:800;color:#a9b2c7;margin-bottom:6px;letter-spacing:.4px;text-transform:uppercase}
+.field input,.field select{width:100%;padding:10px 12px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:9px;outline:none;transition:.2s;appearance:none}
+.field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237d869e' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 11px center;padding-right:32px;cursor:pointer}
+.field select option{background:#12141f;color:#eef1f8}
+.field input:focus,.field select:focus{border-color:rgba(109,94,252,.75);box-shadow:0 0 0 3px rgba(109,94,252,.12)}
 
-/* PAIRING */
-.pairing-wrap{text-align:center;padding:10px 0}
-.pairing-code{font-family:'JetBrains Mono',monospace;font-size:clamp(26px,5vw,38px);font-weight:700;
-  letter-spacing:6px;padding:16px;border-radius:14px;margin:12px 0;
-  background:rgba(0,0,0,.35);border:1px dashed rgba(109,94,252,.4);
-  background-image:linear-gradient(100deg,#8b7bff,#00d4ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.pairing-hint{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px}
-.pairing-hint b{color:#cfd6e6}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:11px 20px;border:none;border-radius:11px;cursor:pointer;
-  font-family:inherit;font-size:12.5px;font-weight:800;color:#fff;
-  background:linear-gradient(160deg,#7b6bff,#4a37e0);
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 10px 22px -8px rgba(109,94,252,.95);
-  transition:.2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border:none;border-radius:9px;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:800;color:#fff;background:linear-gradient(160deg,#7b6bff,#4a37e0);box-shadow:0 8px 18px -6px rgba(109,94,252,.9);transition:.2s}
 .btn:hover{transform:translateY(-1px)}
 .btn:active{transform:translateY(1px)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn svg{width:14px;height:14px}
-.btn.ghost{background:rgba(255,255,255,.04);border:1px solid var(--stroke);color:#c9d0e2;
-  box-shadow:0 1px 0 rgba(255,255,255,.05) inset}
-.btn.ghost:hover{border-color:var(--stroke-2);color:#fff}
-.btn.danger{background:linear-gradient(160deg,#ef4444,#b91c1c);
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 10px 22px -8px rgba(239,68,68,.9)}
+.btn svg{width:12px;height:12px}
+.btn.full{width:100%;padding:11px 16px;font-size:12.5px}
+.btn.ghost{background:rgba(255,255,255,.04);border:1px solid var(--stroke);color:#c9d0e2}
+.btn.ghost:hover{border-color:rgba(255,255,255,.16);color:#fff}
 
-/* CHAT */
-.chat-shell{display:flex;flex-direction:column;height:calc(100vh - 260px);min-height:420px;max-height:640px}
-.chat-head{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--stroke)}
-.ch-avatar{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;
-  background:linear-gradient(160deg,#7b6bff,#4a37e0);font-weight:800;font-size:13px;color:#fff}
-.chat-head h3{font-size:13.5px;font-weight:800}
-.chat-head small{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-top:1px}
-.chat-body{flex:1;overflow-y:auto;padding:16px 4px;display:flex;flex-direction:column;gap:10px}
-.chat-body::-webkit-scrollbar{width:5px}
-.chat-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
-.msg{max-width:78%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;
-  animation:mi .28s cubic-bezier(.2,.9,.3,1.1) both;word-wrap:break-word}
-@keyframes mi{from{opacity:0;transform:translateY(7px) scale(.97)}to{opacity:1;transform:none}}
-.msg.me{align-self:flex-end;background:linear-gradient(160deg,#7b6bff,#5a45f0);color:#fff;border-bottom-right-radius:5px}
-.msg.other{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-bottom-left-radius:5px}
-.msg .time{display:block;font-size:10px;opacity:.55;margin-top:4px;font-weight:600}
-.chat-input-row{display:flex;gap:9px;padding-top:12px;border-top:1px solid var(--stroke)}
-.chat-input-row input{flex:1;padding:12px 15px;border-radius:11px;outline:none;font-family:inherit;
-  font-size:13px;font-weight:600;color:var(--text);background:rgba(255,255,255,.05);
-  border:1px solid var(--stroke);transition:.2s}
-.chat-input-row input:focus{border-color:rgba(109,94,252,.6);box-shadow:0 0 0 3px rgba(109,94,252,.12)}
-.chat-input-row button{width:44px;height:44px;flex:0 0 auto;border:none;border-radius:11px;cursor:pointer;
-  display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,#7b6bff,#4a37e0);
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 8px 18px -6px rgba(109,94,252,.9);transition:.2s}
-.chat-input-row button:hover{transform:translateY(-2px)}
-.chat-input-row button svg{width:17px;height:17px}
+.pairing{text-align:center;padding:6px 0}
+.pairing-code{font-family:'JetBrains Mono',monospace;font-size:clamp(22px,4.5vw,30px);font-weight:700;letter-spacing:4px;padding:12px;border-radius:11px;margin:10px 0;background:rgba(0,0,0,.35);border:1px dashed rgba(109,94,252,.4);background-image:linear-gradient(100deg,#8b7bff,#00d4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pairing-hint{font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px}
+.pairing-hint b{color:#cfd6e6}
 
-/* TIMELINE */
-.timeline{position:relative;padding-left:26px}
-.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:2px;
-  background:linear-gradient(180deg,rgba(109,94,252,.4),rgba(109,94,252,.05))}
-.tl-item{position:relative;padding:10px 0 14px}
-.tl-dot{position:absolute;left:-26px;top:14px;width:20px;height:20px;border-radius:7px;
-  display:grid;place-items:center;background:linear-gradient(160deg,#7b6bff,#4a37e0);color:#fff;
-  box-shadow:0 0 16px -4px rgba(109,94,252,.9)}
-.tl-dot svg{width:11px;height:11px}
-.tl-dot.ok{background:linear-gradient(160deg,#22c55e,#16a34a);box-shadow:0 0 16px -4px rgba(34,197,94,.9)}
-.tl-dot.warn{background:linear-gradient(160deg,#ffb020,#e08a00);box-shadow:0 0 16px -4px rgba(255,176,32,.9)}
-.tl-dot.danger{background:linear-gradient(160deg,#ef4444,#b91c1c);box-shadow:0 0 16px -4px rgba(239,68,68,.9)}
-.tl-title{font-size:13px;font-weight:800;margin-bottom:2px}
-.tl-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 14px;text-align:center;color:var(--muted)}
+.empty svg{width:32px;height:32px;color:#3d4557;margin-bottom:10px}
+.empty p{font-size:11.5px;font-weight:600;max-width:240px;line-height:1.6}
 
-/* EMPTY */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;text-align:center;color:var(--muted)}
-.empty svg{width:40px;height:40px;color:var(--muted-2);margin-bottom:12px}
-.empty p{font-size:12.5px;font-weight:600;max-width:280px;line-height:1.6}
+.chat-shell{display:flex;flex-direction:column;height:calc(100vh - 240px);min-height:360px;max-height:560px}
+.chat-body{flex:1;overflow-y:auto;padding:12px 4px;display:flex;flex-direction:column;gap:8px}
+.chat-body::-webkit-scrollbar{width:4px}
+.chat-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.msg{max-width:78%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.5;animation:mi .25s both;word-wrap:break-word}
+@keyframes mi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.msg.me{align-self:flex-end;background:linear-gradient(160deg,#7b6bff,#5a45f0);color:#fff;border-bottom-right-radius:4px}
+.msg.other{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-bottom-left-radius:4px}
+.msg .time{display:block;font-size:9px;opacity:.55;margin-top:3px;font-weight:600}
+.chat-in{display:flex;gap:7px;padding-top:10px;border-top:1px solid var(--stroke)}
+.chat-in input{flex:1;padding:9px 12px;border-radius:9px;outline:none;font-family:inherit;font-size:12px;font-weight:600;color:var(--text);background:rgba(255,255,255,.04);border:1px solid var(--stroke)}
+.chat-in button{width:36px;height:36px;border:none;border-radius:9px;cursor:pointer;display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,#7b6bff,#4a37e0)}
+.chat-in button svg{width:14px;height:14px}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140%);z-index:200;
-  display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;
-  font-size:12.5px;font-weight:700;color:#fff;background:rgba(18,22,38,.96);
-  border:1px solid var(--stroke-2);box-shadow:0 20px 40px -14px rgba(0,0,0,1);
-  backdrop-filter:blur(12px);transition:transform .4s cubic-bezier(.2,.9,.3,1.2);max-width:90vw}
+.wd-item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid var(--stroke);margin-bottom:8px}
+.wd-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.wd-amt{font-size:13px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#ffcf70}
+.wd-st{font-size:9px;font-weight:800;padding:2px 8px;border-radius:5px;letter-spacing:.4px;text-transform:uppercase}
+.wd-st.pending{color:#ffcf70;background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.3)}
+.wd-st.approved{color:#6ee7a0;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
+.wd-st.rejected{color:#ff9a9a;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3)}
+.wd-meta{font-size:10.5px;color:var(--muted);font-weight:600;display:flex;flex-direction:column;gap:1px}
+.wd-meta b{color:#cfd6e6}
+
+.ref-box{text-align:center;padding:18px;border-radius:12px;background:linear-gradient(160deg,rgba(255,176,32,.1),rgba(255,176,32,.02));border:1px solid rgba(255,176,32,.25)}
+.ref-code{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;padding:10px;border-radius:9px;background:rgba(0,0,0,.35);border:1px dashed rgba(255,176,32,.4);margin:8px 0;word-break:break-all;color:#ffcf70}
+.ref-link{font-size:10.5px;color:var(--muted);word-break:break-all;font-family:'JetBrains Mono',monospace;padding:7px;border-radius:7px;background:rgba(255,255,255,.03);border:1px solid var(--stroke);margin-bottom:8px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,140%);z-index:200;padding:11px 18px;border-radius:11px;font-size:12px;font-weight:700;color:#fff;background:rgba(18,22,38,.96);border:1px solid rgba(255,255,255,.14);transition:transform .4s cubic-bezier(.2,.9,.3,1.2)}
 .toast.show{transform:translate(-50%,0)}
-.toast svg{width:16px;height:16px;flex:0 0 auto}
-.toast.ok svg{color:#6ee7a0}
-.toast.err svg{color:#ff9a9a}
 
-/* LOADER */
-.loader-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:300;
-  background:linear-gradient(90deg,#7b6bff,#00d4ff,#7b6bff);background-size:200% 100%;
-  transform:scaleX(0);transform-origin:left;transition:transform .3s ease;
-  box-shadow:0 0 12px rgba(109,94,252,.9)}
-.loader-bar.loading{transform:scaleX(.7);animation:lp 1.5s ease infinite}
-.loader-bar.done{transform:scaleX(1);opacity:0;transition:transform .3s ease,opacity .4s ease .2s}
-@keyframes lp{0%,100%{background-position:0% 0%}50%{background-position:100% 0%}}
-
-/* SIDEBAR MOBILE */
-.sidebar-backdrop{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);display:none}
-.sidebar-backdrop.show{display:block}
+.sb-bd{position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none}
+.sb-bd.show{display:block}
 @media(max-width:900px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .menu-toggle{display:grid}
-  .topbar{padding:12px 16px}
-  .content{padding:18px 14px 80px}
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}.menu-tgl{display:grid}
+  .topbar{padding:10px 14px}.content{padding:14px 14px 80px}
 }
 @media(max-width:560px){
   .stats-grid{grid-template-columns:1fr 1fr}
-  .tp-name{display:none}
-  .page-sub{display:none}
+  .tp-name{display:none}.ps{display:none}
 }
 </style>
 </head>
 <body>
-
-<div class="bg-layer"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="loader-bar" id="loaderBar"></div>
-
 <div class="app">
-  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <div class="sb-bd" id="sbBd"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
-      <div class="sb-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
-        </svg>
-      </div>
-      <div>
-        <div class="sb-name">NEXA<span>PARTNER</span></div>
-        <div class="sb-tag">Partner Dashboard</div>
-      </div>
+      <div class="sb-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div><div class="sb-name">NEXA<span>PARTNER</span></div><div class="sb-tag">Partner Dashboard</div></div>
     </div>
 
     <nav class="sb-nav">
-      <div class="nav-label">Menu Utama</div>
-      <a class="nav-link active" data-view="overview">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        <span>Overview</span>
-      </a>
-      <a class="nav-link" data-view="pendapatan">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        <span>Pendapatan</span>
-      </a>
-      <a class="nav-link" data-view="whatsapp">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        <span>WhatsApp</span>
-      </a>
-      <a class="nav-link" data-view="pairing">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <span>Pairing</span>
-        <span class="badge hidden" id="badgePairing">!</span>
-      </a>
-      <a class="nav-link" data-view="chat">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span>Chat Owner</span>
-        <span class="badge hidden" id="badgeChat">!</span>
-      </a>
-      <div class="nav-label" style="margin-top:6px">Lainnya</div>
-      <a class="nav-link" data-view="riwayat">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-        <span>Riwayat</span>
-      </a>
-      <a class="nav-link" data-view="pengaturan">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span>Pengaturan</span>
-      </a>
+      <a class="nl active" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Overview</span></a>
+      <a class="nl" data-v="rekening"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg><span>Rekening</span></a>
+      <a class="nl" data-v="pairing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>Pairing</span></a>
+      <a class="nl" data-v="tarik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Tarik Saldo</span></a>
+      <a class="nl" data-v="referral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg><span>Undang Teman</span></a>
+      <a class="nl" data-v="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Chat Owner</span></a>
     </nav>
 
-    <div class="sb-footer">
+    <div class="sb-foot">
       <div class="sb-user">
-        <div class="sb-avatar" id="sbAvatar">?</div>
-        <div class="sb-user-info">
-          <div class="sb-user-name" id="sbUserName">...</div>
-          <div class="sb-user-role" id="sbUserRole">Mitra</div>
-        </div>
-        <button class="sb-logout" id="sbLogout" title="Keluar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </button>
+        <div class="sb-av" id="sbAv">?</div>
+        <div class="sb-info"><div class="sb-uname" id="sbUn">...</div><div class="sb-role" id="sbRl">Mitra</div></div>
+        <button class="sb-out" id="sbOut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
       </div>
     </div>
   </aside>
 
   <main class="main">
     <header class="topbar">
-      <div class="top-left">
-        <button class="menu-toggle" id="menuToggle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div>
-          <div class="page-title" id="pageTitle">Overview</div>
-          <div class="page-sub" id="pageSub">Ringkasan aktivitas dan pendapatan Anda</div>
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <button class="menu-tgl" id="menuTgl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div><div class="pt" id="pt">Overview</div><div class="ps" id="ps">Ringkasan akun</div></div>
       </div>
-      <div class="top-profile">
-        <div class="tp-avatar" id="tpAvatar">?</div>
-        <span class="tp-name" id="tpName">User</span>
-      </div>
+      <div class="tp"><div class="tp-av" id="tpAv">?</div><span class="tp-name" id="tpNm">User</span></div>
     </header>
 
     <div class="content">
 
-      <!-- OVERVIEW -->
       <section class="view active" id="view-overview">
-        <div class="earning-hero">
-          <div class="eh-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Saldo Tersedia
-          </div>
-          <div class="eh-amount"><span class="eh-currency">Rp </span><span id="ehNumber">0</span></div>
-          <div class="eh-meta" id="ehMeta"></div>
+        <div class="hero">
+          <div class="hero-lbl">Saldo Tersedia</div>
+          <div class="hero-amt"><span class="hero-cur">Rp </span><span id="heroNum">0</span></div>
+          <div class="hero-meta" id="heroMeta"></div>
         </div>
-
         <div class="stats-grid">
-          <div class="stat-card green">
-            <div class="stat-head">
-              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div>
-            </div>
-            <div class="stat-label">Total Pendapatan</div>
-            <div class="stat-value" id="statTotal">Rp 0</div>
-            <div class="stat-foot" id="statTotalFoot">Belum ada pendapatan</div>
-          </div>
-          <div class="stat-card cyan">
-            <div class="stat-head">
-              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-            </div>
-            <div class="stat-label">Status Bot</div>
-            <div class="stat-value" style="font-size:18px" id="statBotStatus">...</div>
-            <div class="stat-foot" id="statBotFoot">-</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-head">
-              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-            </div>
-            <div class="stat-label">Status WhatsApp</div>
-            <div class="stat-value" style="font-size:18px" id="statWa">...</div>
-            <div class="stat-foot" id="statWaFoot">-</div>
-          </div>
-          <div class="stat-card gold">
-            <div class="stat-head">
-              <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
-            </div>
-            <div class="stat-label">Metode Pencairan</div>
-            <div class="stat-value" style="font-size:18px" id="statPayout">-</div>
-            <div class="stat-foot" id="statPayoutFoot">-</div>
-          </div>
+          <div class="stat green"><div class="stat-lbl">Total Earned</div><div class="stat-val" id="sEarned">Rp 0</div><div class="stat-foot" id="sEarnedF">-</div></div>
+          <div class="stat gold"><div class="stat-lbl">Total Ditarik</div><div class="stat-val" id="sWd">Rp 0</div><div class="stat-foot">Approved</div></div>
+          <div class="stat cyan"><div class="stat-lbl">Status Bot</div><div class="stat-val" id="sBot" style="font-size:14px">-</div><div class="stat-foot" id="sBotF">-</div></div>
+          <div class="stat"><div class="stat-lbl">Status WA</div><div class="stat-val" id="sWa" style="font-size:14px">-</div><div class="stat-foot" id="sWaF">-</div></div>
         </div>
-
-        <div class="grid-2">
+        <div class="grid2">
           <div class="panel">
-            <div class="panel-head">
-              <div class="panel-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                Detail WhatsApp
-              </div>
-            </div>
-            <div id="waCardWrap"></div>
+            <div class="panel-h"><div class="panel-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>WhatsApp Saya</div></div>
+            <div id="waCard"></div>
           </div>
-
           <div class="panel">
-            <div class="panel-head">
-              <div class="panel-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                Pairing
-              </div>
-            </div>
-            <div id="pairingMiniWrap"></div>
+            <div class="panel-h"><div class="panel-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Kode Pairing</div></div>
+            <div id="pairMini"></div>
           </div>
         </div>
       </section>
 
-      <!-- PENDAPATAN -->
-      <section class="view" id="view-pendapatan">
-        <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
-          <div class="stat-card gold">
-            <div class="stat-head"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div>
-            <div class="stat-label">Saldo Tersedia</div>
-            <div class="stat-value" id="pendSaldo">Rp 0</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-head"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div></div>
-            <div class="stat-label">Total Earned</div>
-            <div class="stat-value" id="pendTotal">Rp 0</div>
-          </div>
-          <div class="stat-card cyan">
-            <div class="stat-head"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div></div>
-            <div class="stat-label">Total Ditarik</div>
-            <div class="stat-value" id="pendWithdraw">Rp 0</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Rincian Earning
-          </div></div>
-          <div id="earnDetail" style="font-size:13px;color:var(--muted);line-height:2"></div>
+      <section class="view" id="view-rekening">
+        <div class="panel" style="max-width:540px;margin:0 auto">
+          <div class="panel-h"><div><div class="panel-t">Data Rekening / Wallet</div><div class="panel-s">Perubahan langsung tersimpan</div></div></div>
+          <form id="rekForm">
+            <div class="field"><label>Nama Sesuai Rekening</label><input type="text" id="rekNama" maxlength="60"></div>
+            <div class="field"><label>Nomor Rekening / E-Wallet</label><input type="text" id="rekNomor" maxlength="30"></div>
+            <div class="field"><label>Pilih Wallet</label><select id="rekWallet"><option>DANA</option><option>OVO</option><option>GoPay</option><option>ShopeePay</option><option>Rekening Bank</option></select></div>
+            <button type="submit" class="btn full" id="btnRek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Simpan Perubahan</button>
+          </form>
         </div>
       </section>
 
-      <!-- WHATSAPP -->
-      <section class="view" id="view-whatsapp">
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Detail Akun WhatsApp
-          </div></div>
-          <div id="waDetailWrap"></div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            Panduan Keamanan
-          </div></div>
-          <div style="font-size:12.5px;color:var(--muted);line-height:1.9">
-            <p style="margin-bottom:8px"><b style="color:var(--text)">1. Jangan logout dari perangkat utama.</b> Bot akan mendeteksi jika koneksi terputus dan memberi notifikasi.</p>
-            <p style="margin-bottom:8px"><b style="color:var(--text)">2. Kode pairing bersifat rahasia.</b> Jangan bagikan ke siapa pun.</p>
-            <p><b style="color:var(--text)">3. Hubungi owner via Chat</b> jika status WA menunjukkan "Terputus" lebih dari 5 menit.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- PAIRING -->
       <section class="view" id="view-pairing">
-        <div class="panel" style="max-width:600px;margin:0 auto">
-          <div class="panel-head"><div>
-            <div class="panel-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              Pairing WhatsApp
-            </div>
-            <div class="panel-sub">Sambungkan akun WhatsApp ke sistem</div>
-          </div></div>
-          <div id="pairingFullWrap"></div>
+        <div class="panel" style="max-width:540px;margin:0 auto">
+          <div class="panel-h"><div><div class="panel-t">Pairing WhatsApp</div><div class="panel-s">Kode dikirim owner via bot</div></div></div>
+          <div id="pairFull"></div>
         </div>
       </section>
 
-      <!-- CHAT -->
-      <section class="view" id="view-chat">
-        <div class="panel" style="max-width:740px;margin:0 auto">
-          <div class="chat-shell">
-            <div class="chat-head">
-              <div class="ch-avatar">OW</div>
-              <div>
-                <h3>Owner NexaPartner</h3>
-                <small><span class="pulse-dot" id="chatOnlineDot"></span> <span id="chatOnlineText">Cek status...</span></small>
-              </div>
+      <section class="view" id="view-tarik">
+        <div class="panel" style="max-width:540px;margin:0 auto">
+          <div class="panel-h"><div><div class="panel-t">Tarik Saldo</div><div class="panel-s">Min 15.000 · Admin 1.500</div></div></div>
+          <form id="tarikForm">
+            <div class="field"><label>Jumlah Penarikan</label><input type="number" id="tarikAmt" placeholder="15000" min="15000" step="500"></div>
+            <div class="field"><label>Tujuan Pencairan</label><input type="text" id="tarikTuj" readonly style="color:var(--muted)"></div>
+            <div style="font-size:11px;color:var(--muted);padding:10px 12px;border-radius:9px;background:rgba(255,255,255,.02);border:1px solid var(--stroke);margin-bottom:10px;line-height:1.7">
+              <div>Minimal: <b style="color:#cfd6e6">Rp 15.000</b></div>
+              <div>Admin: <b style="color:#cfd6e6">Rp 1.500</b></div>
+              <div>Terima: <b id="tarikNet" style="color:#ffcf70">Rp 0</b></div>
             </div>
-            <div class="chat-body" id="chatBody">
-              <div class="empty">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <p>Belum ada pesan</p>
-              </div>
-            </div>
-            <div class="chat-input-row">
-              <input type="text" id="chatInput" placeholder="Tulis pesan..." maxlength="500">
-              <button id="chatSend">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg>
-              </button>
-            </div>
+            <button type="submit" class="btn full" id="btnTarik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>Ajukan Penarikan</button>
+          </form>
+          <div style="margin-top:16px">
+            <div style="font-size:11.5px;font-weight:800;margin-bottom:9px">Riwayat Penarikan</div>
+            <div id="wdHistory"></div>
           </div>
         </div>
       </section>
 
-      <!-- RIWAYAT -->
-      <section class="view" id="view-riwayat">
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-            Timeline Aktivitas
-          </div></div>
-          <div class="timeline" id="timeline"></div>
+      <section class="view" id="view-referral">
+        <div class="panel" style="max-width:540px;margin:0 auto">
+          <div class="panel-h"><div><div class="panel-t">Undang Teman</div><div class="panel-s">Dapat Rp 500 per orang</div></div></div>
+          <div class="stats-grid" style="grid-template-columns:1fr 1fr">
+            <div class="stat gold"><div class="stat-lbl">Total Diundang</div><div class="stat-val" id="refCnt">0 <small>orang</small></div></div>
+            <div class="stat green"><div class="stat-lbl">Bonus Referral</div><div class="stat-val" id="refErn">Rp 0</div></div>
+          </div>
+          <div class="ref-box">
+            <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase">Kode Referral</div>
+            <div class="ref-code" id="refCode">-</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700;margin-bottom:5px">Link Undangan</div>
+            <div class="ref-link" id="refLink">-</div>
+            <button class="btn full" id="btnCopyRef"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Salin Link</button>
+          </div>
         </div>
       </section>
 
-      <!-- PENGATURAN -->
-      <section class="view" id="view-pengaturan">
-        <div class="panel" style="max-width:560px;margin:0 auto">
-          <div class="panel-head"><div class="panel-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Pengaturan Akun
-          </div></div>
-          <div id="settingsWrap"></div>
+      <section class="view" id="view-chat">
+        <div class="panel" style="max-width:660px;margin:0 auto">
+          <div class="panel-h"><div><div class="panel-t">Chat Owner</div><div class="panel-s"><span class="pd" id="chatDot"></span> <span id="chatTxt">Cek...</span></div></div></div>
+          <div class="chat-shell">
+            <div class="chat-body" id="chatBody"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Belum ada pesan</p></div></div>
+            <div class="chat-in"><input type="text" id="chatIn" placeholder="Tulis pesan..." maxlength="500"><button id="chatSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg></button></div>
+          </div>
         </div>
       </section>
 
@@ -607,547 +286,357 @@ body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);c
   </main>
 </div>
 
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-  <span id="toastMsg">Berhasil</span>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-/* ============ CONFIG ============ */
-const FIREBASE_URL = "https://webb-caab0-default-rtdb.firebaseio.com";
-const PATH_REG     = "/registrations";
-const PATH_PAIR    = "/pairing";
-const PATH_CHAT    = "/chats";
-const PATH_OWNER   = "/owner/presence";
-const RATE_PER_MIN = 1500;
-const POLL_MS      = 5000;
-const TICK_MS      = 1000;
+const FB = "https://webb-caab0-default-rtdb.firebaseio.com";
+const RATE = 1500, MIN_WD = 15000, FEE = 1500;
+let user = null, uName = localStorage.getItem("nexa_username"), activeView = "overview";
+let tickT, pollT, chatT;
 
-/* ============ STATE ============ */
-let regId     = localStorage.getItem("nexa_reg_id") || sessionStorage.getItem("nexa_reg_id");
-let regData   = null;
-let liveSaldo = 0;
-let tickTimer = null;
-let pollTimer = null;
-let chatTimer = null;
-
-/* ============ HELPERS ============ */
-const $  = s => document.querySelector(s);
+const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
-const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const fmt = n => new Intl.NumberFormat("id-ID").format(Math.floor(n||0));
-const initials = n => { const p = String(n||"?").trim().split(/\s+/); return ((p[0]?.[0]||"")+(p[1]?.[0]||"")).toUpperCase()||"?"; };
+const ini = n => { const p = String(n||"?").trim().split(/\s+/); return ((p[0]?.[0]||"")+(p[1]?.[0]||"")).toUpperCase()||"?"; };
 const fmtDT = ts => ts ? new Date(ts).toLocaleString("id-ID",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "-";
-const fmtTime = ts => ts ? new Date(ts).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"}) : "";
+const fmtT = ts => ts ? new Date(ts).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"}) : "";
 
-function toast(msg, type="ok"){
-  const el = $("#toast");
-  $("#toastMsg").textContent = msg;
-  el.classList.toggle("ok", type==="ok");
-  el.classList.toggle("err", type==="err");
-  el.querySelector("svg").innerHTML = type==="ok"
-    ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>'
-    : '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>';
-  el.classList.add("show");
-  clearTimeout(window.__t);
-  window.__t = setTimeout(()=>el.classList.remove("show"), 2800);
-}
+function toast(m){const t=$("#toast");t.textContent=m;t.className="toast show";clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),2500);}
 
-function setLoader(state){
-  const bar = $("#loaderBar");
-  bar.classList.remove("loading","done");
-  if(state === "loading") bar.classList.add("loading");
-  else if(state === "done"){ bar.classList.add("done"); setTimeout(()=>bar.classList.remove("done"), 600); }
-}
+async function fbGet(p){const r=await fetch(`${FB}${p}.json`);return r.json();}
+async function fbPost(p,d){const r=await fetch(`${FB}${p}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});return r.json();}
+async function fbPatch(p,d){const r=await fetch(`${FB}${p}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});return r.json();}
 
-/* ============ FIREBASE ============ */
-async function fbGet(p){ const r = await fetch(`${FIREBASE_URL}${p}.json`); if(!r.ok) throw new Error(r.status); return await r.json(); }
-async function fbPost(p,d){ const r = await fetch(`${FIREBASE_URL}${p}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}); if(!r.ok) throw new Error(r.status); return r.json(); }
-async function fbPatch(p,d){ const r = await fetch(`${FIREBASE_URL}${p}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}); if(!r.ok) throw new Error(r.status); return r.json(); }
-
-/* ============ LIVE SALDO ============ */
-function calcLiveSaldo(){
-  if(!regData) return 0;
-  const earned = Number(regData.totalEarned) || 0;
-  const withdrawn = Number(regData.totalWithdrawn) || 0;
-  const base = Math.max(0, earned - withdrawn);
-  if(!regData.botStarted || regData.botStopped) return base;
-  if(regData.waStatus !== "connected") return base;
-  const last = Number(regData.lastAccrualAt) || Number(regData.botStartedAt);
+function calcLive(){
+  if(!user) return 0;
+  const earned = Number(user.totalEarned)||0;
+  const wd = Number(user.totalWithdrawn)||0;
+  const base = Math.max(0, earned - wd);
+  if(!user.botStarted || user.botStopped) return base;
+  if(user.waStatus !== "connected") return base;
+  const last = Number(user.lastAccrualAt)||Number(user.botStartedAt);
   if(!last) return base;
-  const elapsed = Math.max(0, Date.now() - last);
-  const liveDelta = (elapsed / 60000) * RATE_PER_MIN;
-  return base + liveDelta;
+  return base + ((Date.now() - last) / 60000) * RATE;
 }
 
-function tickSaldo(){
-  const live = calcLiveSaldo();
-  liveSaldo = live;
-  const ehNum = $("#ehNumber");
-  if(ehNum){
-    const f = fmt(live);
-    if(ehNum.textContent !== f){
-      ehNum.textContent = f;
-      const eh = ehNum.closest(".eh-amount");
-      if(eh){ eh.classList.remove("tick"); void eh.offsetWidth; eh.classList.add("tick"); }
-    }
-  }
-  const pend = $("#pendSaldo");
-  if(pend) pend.textContent = "Rp " + fmt(live);
+function tick(){
+  const v = calcLive();
+  const el = $("#heroNum");
+  if(el) el.textContent = fmt(v);
+  const s = $("#sEarned"); if(s) s.textContent = "Rp " + fmt(Number(user?.totalEarned)||0);
 }
 
-function startTicker(){
-  if(tickTimer) clearInterval(tickTimer);
-  tickSaldo();
-  tickTimer = setInterval(tickSaldo, TICK_MS);
-}
-
-/* ============ LOAD REG ============ */
-async function loadReg(){
-  if(!regId) return;
+async function loadUser(){
+  if(!uName){ window.location.href = "index.html"; return; }
   try{
-    const [reg, pair] = await Promise.all([
-      fbGet(`${PATH_REG}/${regId}`),
-      fbGet(`${PATH_PAIR}/${regId}`)
-    ]);
-    if(!reg){
-      localStorage.removeItem("nexa_reg_id");
-      sessionStorage.removeItem("nexa_reg_id");
-      window.location.href = "index.html";
-      return;
-    }
-    regData = { ...reg, _pair: pair };
+    const u = await fbGet(`/users/${uName}`);
+    if(!u){ localStorage.removeItem("nexa_username"); window.location.href = "index.html"; return; }
+    if(u.status !== "active"){ alert("Akun tidak aktif"); window.location.href = "index.html"; return; }
+    user = u;
     renderAll();
-  }catch(e){ console.error("[loadReg]", e); }
+  }catch(e){ console.error(e); }
 }
 
-/* ============ RENDER ============ */
 function renderAll(){
-  if(!regData) return;
-  const name = regData.pemilik || regData.nama || "Mitra";
-  $("#sbUserName").textContent = name;
-  $("#sbUserRole").textContent = regData.status === "Diterima" ? "Mitra Aktif" : "Menunggu Verifikasi";
-  $("#sbAvatar").textContent = initials(name);
-  $("#tpName").textContent = name.split(" ")[0];
-  $("#tpAvatar").textContent = initials(name);
+  if(!user) return;
+  const n = user.namaRekening || user.username;
+  $("#sbUn").textContent = n;
+  $("#sbRl").textContent = "Mitra Aktif";
+  $("#sbAv").textContent = ini(n);
+  $("#tpNm").textContent = n.split(" ")[0];
+  $("#tpAv").textContent = ini(n);
 
-  renderHero();
-  renderStats();
-  renderWaCard();
-  renderWaDetail();
-  renderPairingMini();
-  renderPairingFull();
-  renderEarnDetail();
-  renderTimeline();
-  renderSettings();
-  tickSaldo();
+  renderHero(); renderStats(); renderWaCard(); renderPairMini();
+  renderPairFull(); renderWdHistory(); renderRef(); renderRekeningForm(); tick();
 }
 
 function renderHero(){
-  const meta = $("#ehMeta");
-  if(!meta) return;
-  const running = regData.botStarted && !regData.botStopped;
-  const waOk = regData.waStatus === "connected";
-  const stopped = regData.botStopped;
-
-  if(running && waOk){
-    const start = regData.botStartedAt ? new Date(regData.botStartedAt) : null;
-    meta.innerHTML = `
-      <span class="rate-live">+ Rp 1.500 / menit</span>
-      <small>Bot berjalan sejak ${start ? start.toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "-"}</small>`;
-  } else if(running && !waOk){
-    meta.innerHTML = `
-      <span class="rate-paused">WA Terputus — Paused</span>
-      <small>Hubungkan ulang WhatsApp untuk lanjut</small>`;
-  } else if(stopped){
-    meta.innerHTML = `
-      <span class="rate-stopped">Bot Dihentikan</span>
-      <small>Owner menghentikan earning. Hubungi owner untuk mengaktifkan.</small>`;
+  const m = $("#heroMeta");
+  const run = user.botStarted && !user.botStopped;
+  const waOk = user.waStatus === "connected";
+  if(run && waOk){
+    m.innerHTML = `<span class="rate-live">+ Rp 1.500 / menit</span> Sejak ${fmtDT(user.botStartedAt)}`;
+  } else if(run && !waOk){
+    m.innerHTML = `<span class="rate-paused">WA Terputus — Paused</span>`;
+  } else if(user.botStopped){
+    m.innerHTML = `<span class="rate-paused">Bot Dihentikan</span>`;
   } else {
-    meta.innerHTML = `
-      <span class="rate-paused">Menunggu Owner Start Bot</span>
-      <small>Owner perlu mengaktifkan bot via Telegram</small>`;
+    m.innerHTML = `<span class="rate-paused">Menunggu Owner Aktifkan Bot</span>`;
   }
 }
 
 function renderStats(){
-  $("#statTotal").textContent = "Rp " + fmt(Number(regData.totalEarned) || 0);
-  $("#statTotalFoot").textContent = regData.botStarted ? "Akumulasi sejak bot dimulai" : "Belum ada pendapatan";
+  $("#sEarned").textContent = "Rp " + fmt(Number(user.totalEarned)||0);
+  $("#sEarnedF").textContent = user.botStarted ? "Akumulasi" : "Belum ada";
+  $("#sWd").textContent = "Rp " + fmt(Number(user.totalWithdrawn)||0);
+  const run = user.botStarted && !user.botStopped;
+  const b = $("#sBot"), bf = $("#sBotF");
+  if(run){ b.textContent = "Running"; b.style.color = "#6ee7a0"; bf.innerHTML = '<span class="pd green"></span>Menghitung'; }
+  else if(user.botStopped){ b.textContent = "Stopped"; b.style.color = "#ffcf70"; bf.textContent = "Dihentikan"; }
+  else { b.textContent = "Waiting"; b.style.color = "#7d869e"; bf.textContent = "Belum aktif"; }
 
-  const running = regData.botStarted && !regData.botStopped;
-  const botStatus = $("#statBotStatus"), botFoot = $("#statBotFoot");
-  if(running){
-    botStatus.textContent = "Running"; botStatus.style.color = "#6ee7a0";
-    botFoot.innerHTML = '<span class="pulse-dot green"></span> Menghitung otomatis';
-  } else if(regData.botStopped){
-    botStatus.textContent = "Stopped"; botStatus.style.color = "#ffcf70";
-    botFoot.textContent = "Dihentikan owner";
-  } else {
-    botStatus.textContent = "Waiting"; botStatus.style.color = "#7d869e";
-    botFoot.textContent = "Owner belum aktifkan";
-  }
-
-  const wa = regData.waStatus || "none";
-  const waEl = $("#statWa"), waFoot = $("#statWaFoot");
-  if(wa === "connected"){ waEl.textContent = "Tersambung"; waEl.style.color = "#6ee7a0"; waFoot.innerHTML = '<span class="pulse-dot green"></span> Aktif'; }
-  else if(wa === "disconnected"){ waEl.textContent = "Terputus"; waEl.style.color = "#ff9a9a"; waFoot.innerHTML = '<span class="pulse-dot red"></span> Perlu reconnect'; }
-  else if(wa === "pairing"){ waEl.textContent = "Pairing"; waEl.style.color = "#ffcf70"; waFoot.textContent = "Menunggu konfirmasi"; }
-  else { waEl.textContent = "Belum"; waEl.style.color = "var(--muted)"; waFoot.textContent = "Belum pairing"; }
-
-  $("#statPayout").textContent = regData.dompet || "-";
-  $("#statPayoutFoot").textContent = regData.nomor || "-";
-
-  $("#pendTotal").textContent = "Rp " + fmt(Number(regData.totalEarned)||0);
-  $("#pendWithdraw").textContent = "Rp " + fmt(Number(regData.totalWithdrawn)||0);
+  const wa = user.waStatus || "none";
+  const w = $("#sWa"), wf = $("#sWaF");
+  if(wa === "connected"){ w.textContent = "Tersambung"; w.style.color = "#6ee7a0"; wf.innerHTML = '<span class="pd green"></span>Aktif'; }
+  else if(wa === "disconnected"){ w.textContent = "Terputus"; w.style.color = "#ff9a9a"; wf.innerHTML = '<span class="pd red"></span>Perlu reconnect'; }
+  else if(wa === "pairing"){ w.textContent = "Pairing"; w.style.color = "#ffcf70"; wf.innerHTML = '<span class="pd gold"></span>Menunggu'; }
+  else { w.textContent = "Belum"; w.style.color = "#7d869e"; wf.textContent = "Belum pairing"; }
 }
 
 function renderWaCard(){
-  const wrap = $("#waCardWrap");
-  if(!wrap) return;
-  const wa = regData.waStatus || "none";
-  const cls = wa === "connected" ? "" : wa === "pairing" ? "warn" : "danger";
-  const pillCls = wa === "connected" ? "connected" : wa === "pairing" ? "pairing" : wa === "disconnected" ? "disconnected" : "none";
-  const pillTxt = wa === "connected" ? "Tersambung" : wa === "pairing" ? "Pairing" : wa === "disconnected" ? "Terputus" : "Belum";
-  wrap.innerHTML = `
-    <div class="wa-card ${cls}">
-      <div class="wa-head">
-        <div class="wa-avatar ${cls}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
-        <div class="wa-info">
-          <div class="wa-name">${esc(regData.pemilik || "-")}</div>
-          <div class="wa-phone">${esc(regData.wa || "-")}</div>
-        </div>
-        <span class="wa-pill ${pillCls}">${pillTxt}</span>
-      </div>
-      <div class="wa-meta" style="border-top:none;padding-top:0">
-        <div class="wa-meta-item"><b>Dompet:</b> ${esc(regData.dompet || "-")}</div>
-        <div class="wa-meta-item"><b>Nomor:</b> ${esc(regData.nomor || "-")}</div>
-      </div>
-    </div>`;
+  const wa = user.waStatus || "none";
+  const lbl = wa === "connected" ? "Tersambung" : wa === "pairing" ? "Pairing" : wa === "disconnected" ? "Terputus" : "Belum";
+  const col = wa === "connected" ? "#6ee7a0" : wa === "pairing" ? "#ffcf70" : wa === "disconnected" ? "#ff9a9a" : "#7d869e";
+  $("#waCard").innerHTML = `
+    <div style="font-size:13px;font-weight:800;margin-bottom:8px">${esc(user.namaRekening)}</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:10px">${esc(user.nomorWA || "-")}</div>
+    <div style="display:inline-block;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:${col}">${lbl}</div>
+  `;
 }
 
-function renderWaDetail(){
-  const wrap = $("#waDetailWrap");
-  if(!wrap) return;
-  const wa = regData.waStatus || "none";
-  const cls = wa === "connected" ? "" : wa === "pairing" ? "warn" : "danger";
-  const pillCls = wa === "connected" ? "connected" : wa === "pairing" ? "pairing" : wa === "disconnected" ? "disconnected" : "none";
-  const pillTxt = wa === "connected" ? "Tersambung" : wa === "pairing" ? "Pairing" : wa === "disconnected" ? "Terputus" : "Belum";
-  wrap.innerHTML = `
-    <div class="wa-card ${cls}" style="background:transparent;border:none;padding:0">
-      <div class="wa-head">
-        <div class="wa-avatar ${cls}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
-        <div class="wa-info">
-          <div class="wa-name">${esc(regData.pemilik || "-")}</div>
-          <div class="wa-phone">${esc(regData.wa || "-")}</div>
-        </div>
-        <span class="wa-pill ${pillCls}">${pillTxt}</span>
-      </div>
-      <div class="wa-meta" style="border-top:none;padding-top:0">
-        <div class="wa-meta-item"><b>Dompet:</b> ${esc(regData.dompet || "-")}</div>
-        <div class="wa-meta-item"><b>Nomor:</b> ${esc(regData.nomor || "-")}</div>
-        <div class="wa-meta-item"><b>Usia WA:</b> ${esc(regData.usiaAkun || "-")}</div>
-      </div>
-    </div>`;
-}
-
-function renderPairingMini(){
-  const wrap = $("#pairingMiniWrap");
-  if(!wrap) return;
-  const wa = regData.waStatus || "none";
-  const pair = regData._pair;
+function renderPairMini(){
+  const wa = user.waStatus || "none";
   if(wa === "connected"){
-    wrap.innerHTML = `<div class="empty" style="padding:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:#6ee7a0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><p style="color:#6ee7a0">Sudah tersambung</p></div>`;
+    $("#pairMini").innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#6ee7a0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><p style="color:#6ee7a0">Sudah tersambung</p></div>`;
     return;
   }
-  if(regData.pairingCode){
-    wrap.innerHTML = `
-      <div class="pairing-wrap">
-        <div style="font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase">Kode Pairing</div>
-        <div class="pairing-code">${esc(regData.pairingCode)}</div>
-        <button class="btn ghost" onclick="copyCode('${esc(regData.pairingCode)}')" style="margin-top:4px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Salin Kode
-        </button>
-      </div>`;
+  if(user.pairingCode){
+    $("#pairMini").innerHTML = `<div class="pairing"><div style="font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Kode Anda</div><div class="pairing-code">${esc(user.pairingCode)}</div><button class="btn ghost" onclick="copyKode('${esc(user.pairingCode)}')" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Salin</button></div>`;
     return;
   }
-  if(pair?.status === "requested"){
-    wrap.innerHTML = `<div class="empty" style="padding:16px"><p style="color:#ffcf70">Menunggu konfirmasi owner...</p></div>`;
+  if(user.pairingRequestedAt){
+    $("#pairMini").innerHTML = `<div class="empty"><p style="color:#ffcf70">Request terkirim. Menunggu owner kirim kode.</p></div>`;
     return;
   }
-  wrap.innerHTML = `<div class="empty" style="padding:16px"><p>Belum ada proses pairing</p></div>`;
+  $("#pairMini").innerHTML = `<div class="empty"><p>Belum ada kode pairing</p><button class="btn" style="margin-top:10px" onclick="location.hash='#pairing'">Minta Kode</button></div>`;
 }
 
-function renderPairingFull(){
-  const wrap = $("#pairingFullWrap");
-  if(!wrap) return;
-  const wa = regData.waStatus || "none";
-  const pair = regData._pair;
-  if(wa === "connected"){
-    wrap.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:#6ee7a0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><p style="color:#6ee7a0">WhatsApp sudah tersambung</p></div>`;
-    return;
-  }
-  if(regData.pairingCode){
-    wrap.innerHTML = `
-      <div class="pairing-wrap">
-        <div style="font-size:11px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase">Kode Pairing Anda</div>
-        <div class="pairing-code">${esc(regData.pairingCode)}</div>
-        <div class="pairing-hint">
-          Buka <b>WhatsApp</b> → <b>Perangkat Tertaut</b> → <b>Tautkan dengan nomor telepon</b><br>
-          Masukkan kode di atas. Jangan bagikan ke siapa pun.
-        </div>
-        <button class="btn ghost" style="margin-top:14px" onclick="copyCode('${esc(regData.pairingCode)}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Salin Kode
-        </button>
-      </div>`;
-    return;
-  }
-  if(pair?.status === "requested"){
-    wrap.innerHTML = `<div class="empty"><p style="color:#ffcf70">Permintaan terkirim. Menunggu owner online...</p></div>`;
-    return;
-  }
-  wrap.innerHTML = `
-    <div class="empty">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      <p>Belum ada proses pairing</p>
-      <button class="btn" style="margin-top:14px" onclick="requestPairing()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg>
-        Kirim Permintaan Pairing
-      </button>
-    </div>`;
-}
-
-function copyCode(code){
-  navigator.clipboard.writeText(code).then(()=>toast("Kode disalin","ok")).catch(()=>toast("Gagal salin","err"));
-}
-
-async function requestPairing(){
-  if(!regId){ toast("Daftar dulu","err"); return; }
-  try{
-    await fbPatch(`${PATH_PAIR}/${regId}`, {
-      status: "requested",
-      requestedAt: Date.now(),
-      wa: regData.wa, waNormalized: regData.waNormalized,
-      nama: regData.nama, pemilik: regData.pemilik
-    });
-    toast("Permintaan terkirim","ok");
-    loadReg();
-  }catch(e){ toast("Gagal kirim","err"); }
-}
-
-function renderEarnDetail(){
-  const el = $("#earnDetail");
+function renderPairFull(){
+  const el = $("#pairFull");
   if(!el) return;
-  const total = Number(regData.totalEarned) || 0;
-  const withdrawn = Number(regData.totalWithdrawn) || 0;
-  const available = Math.max(0, total - withdrawn);
+  const wa = user.waStatus || "none";
+
+  if(wa === "connected"){
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#6ee7a0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><p style="color:#6ee7a0">WhatsApp sudah tersambung</p></div>`;
+    return;
+  }
+
+  if(user.pairingCode){
+    el.innerHTML = `
+      <div class="pairing">
+        <div style="font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase">Kode Pairing Anda</div>
+        <div class="pairing-code">${esc(user.pairingCode)}</div>
+        <div class="pairing-hint">Buka <b>WhatsApp</b> → <b>Perangkat Tertaut</b> → <b>Tautkan dengan nomor telepon</b><br>Masukkan kode di atas.</div>
+        <button class="btn ghost" style="margin-top:12px" onclick="copyKode('${esc(user.pairingCode)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Salin Kode
+        </button>
+      </div>`;
+    return;
+  }
+
+  if(user.pairingRequestedAt){
+    el.innerHTML = `<div class="empty"><p style="color:#ffcf70">Request terkirim. Tunggu owner kirim kode.</p></div>`;
+    return;
+  }
+
   el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stroke)">
-      <span>Total Pendapatan</span><b style="color:#6ee7a0;font-family:'JetBrains Mono',monospace">Rp ${fmt(total)}</b>
+    <div class="field">
+      <label>Nomor WhatsApp yang Mau Di-Pair</label>
+      <input type="tel" id="pairPhone" placeholder="08xxxxxxxxxx" value="${esc(user.nomorWA || "")}" maxlength="18">
     </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stroke)">
-      <span>Total Ditarik</span><b style="color:#ff9a9a;font-family:'JetBrains Mono',monospace">Rp ${fmt(withdrawn)}</b>
+    <button class="btn full" id="btnPairReq">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg>Kirim Permintaan Pairing
+    </button>
+    <div class="pairing-hint" style="margin-top:10px">
+      Pastikan nomor WA aktif. Owner akan generate kode pairing dan mengirimkannya ke Anda.
     </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stroke)">
-      <span>Saldo Tersedia</span><b style="color:#ffcf70;font-family:'JetBrains Mono',monospace">Rp ${fmt(available)}</b>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stroke)">
-      <span>Bot Dimulai</span><b>${fmtDT(regData.botStartedAt)}</b>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0">
-      <span>Rate Aktif</span><b>Rp 1.500 / menit</b>
-    </div>`;
+  `;
+
+  $("#btnPairReq").onclick = async () => {
+    const phone = $("#pairPhone").value.trim();
+    if(phone.length < 10){ toast("Nomor tidak valid"); return; }
+    const btn = $("#btnPairReq");
+    btn.disabled = true; btn.innerHTML = "Mengirim...";
+    try{
+      await fbPatch(`/users/${uName}`, {
+        nomorWA: phone,
+        pairingRequestedAt: Date.now(),
+        pairingNotifiedToOwner: false
+      });
+      toast("Request terkirim");
+      loadUser();
+    }catch(e){ toast("Gagal kirim"); btn.disabled = false; btn.innerHTML = "Kirim Permintaan Pairing"; }
+  };
 }
 
-function renderTimeline(){
-  const el = $("#timeline");
-  if(!el) return;
-  const items = [];
-  if(regData.createdAt){
-    items.push({ at: regData.createdAt, title: "Pendaftaran dibuat", sub: fmtDT(regData.createdAt), cls: "", ico: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/>' });
-  }
-  if(regData._pair?.requestedAt){
-    items.push({ at: regData._pair.requestedAt, title: "Permintaan pairing dikirim", sub: fmtDT(regData._pair.requestedAt), cls: "warn", ico: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>' });
-  }
-  if(regData.waConnectedAt){
-    items.push({ at: regData.waConnectedAt, title: "WhatsApp tersambung", sub: fmtDT(regData.waConnectedAt), cls: "ok", ico: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>' });
-  }
-  if(regData.botStartedAt){
-    items.push({ at: regData.botStartedAt, title: "Bot earning dimulai", sub: fmtDT(regData.botStartedAt), cls: "ok", ico: '<path d="m22 2-7 20-4-9-9-4z"/>' });
-  }
-  if(regData.stoppedAt){
-    items.push({ at: regData.stoppedAt, title: "Bot earning dihentikan", sub: fmtDT(regData.stoppedAt), cls: "danger", ico: '<path d="M18 6 6 18M6 6l12 12"/>' });
-  }
-  if(regData.waDisconnectedAt){
-    items.push({ at: regData.waDisconnectedAt, title: "WhatsApp terputus", sub: fmtDT(regData.waDisconnectedAt), cls: "danger", ico: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' });
-  }
-  items.sort((a,b) => a.at - b.at);
+function copyKode(c){ navigator.clipboard.writeText(c).then(()=>toast("Disalin")).catch(()=>toast("Gagal")); }
 
-  if(!items.length){
-    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><p>Belum ada aktivitas</p></div>`;
-    return;
-  }
-
-  el.innerHTML = items.map(it => `
-    <div class="tl-item">
-      <div class="tl-dot ${it.cls}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${it.ico}</svg>
+async function renderWdHistory(){
+  try{
+    const wds = await fbGet("/withdrawals") || {};
+    const mine = Object.entries(wds)
+      .filter(([,w]) => w.username === uName)
+      .sort((a,b) => (b[1].requestedAt||0) - (a[1].requestedAt||0));
+    const el = $("#wdHistory");
+    if(!mine.length){ el.innerHTML = `<div class="empty" style="padding:16px"><p style="font-size:11px">Belum ada penarikan</p></div>`; return; }
+    el.innerHTML = mine.map(([id,w]) => `
+      <div class="wd-item">
+        <div class="wd-top">
+          <div class="wd-amt">Rp ${fmt(w.amount)}</div>
+          <div class="wd-st ${w.status}">${w.status}</div>
+        </div>
+        <div class="wd-meta">
+          <div>Net: <b>Rp ${fmt(w.net)}</b></div>
+          <div>Ke: <b>${esc(w.wallet)} ${esc(w.nomorRekening)}</b></div>
+          <div>${fmtDT(w.requestedAt)}</div>
+        </div>
       </div>
-      <div class="tl-title">${esc(it.title)}</div>
-      <div class="tl-sub">${esc(it.sub)}</div>
-    </div>`).join("");
-}
-
-function renderSettings(){
-  const wrap = $("#settingsWrap");
-  if(!wrap) return;
-  const rows = [
-    ["Nama Rekening", regData.pemilik || "-"],
-    ["WhatsApp", regData.wa || "-"],
-    ["Metode Pencairan", `${regData.dompet || "-"} · ${regData.nomor || "-"}`],
-    ["Usia WA", regData.usiaAkun || "-"],
-    ["Status Akun", regData.status || "Menunggu"],
-    ["ID Pendaftaran", "#" + String(regId||"").slice(-8).toUpperCase()]
-  ];
-  wrap.innerHTML = rows.map(([k,v]) => `
-    <div style="padding:12px 14px;border:1px solid var(--stroke);border-radius:11px;background:rgba(255,255,255,.02);margin-bottom:10px">
-      <div style="font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">${esc(k)}</div>
-      <div style="font-size:13px;font-weight:700">${esc(v)}</div>
-    </div>`).join("");
-}
-
-/* ============ CHAT ============ */
-async function loadChat(){
-  if(!regId) return;
-  try{
-    const raw = await fbGet(`${PATH_CHAT}/${regId}/messages`) || {};
-    const msgs = Object.values(raw).sort((a,b) => (a.at||0) - (b.at||0));
-    const body = $("#chatBody");
-    if(!msgs.length){
-      body.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Belum ada pesan. Tulis sesuatu untuk owner.</p></div>`;
-      return;
-    }
-    const wasBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 80;
-    body.innerHTML = msgs.map(m => `
-      <div class="msg ${m.from === "user" ? "me" : "other"}">${esc(m.text)}<span class="time">${fmtTime(m.at)}</span></div>
     `).join("");
-    if(wasBottom) body.scrollTop = body.scrollHeight;
-
-    const lastOwner = msgs.filter(m => m.from === "owner").pop();
-    if(lastOwner && activeView !== "chat" && (Date.now() - lastOwner.at) < 60000){
-      $("#badgeChat").classList.remove("hidden");
-    }
-  }catch(e){ console.error(e); }
-}
-
-async function sendChat(){
-  const inp = $("#chatInput");
-  const text = inp.value.trim();
-  if(!text || !regId) return;
-  inp.value = "";
-  try{
-    await fbPost(`${PATH_CHAT}/${regId}/messages`, { from: "user", text, at: Date.now(), notifiedToOwner: false });
-    await loadChat();
-  }catch(e){ toast("Gagal kirim", "err"); inp.value = text; }
-}
-$("#chatSend").addEventListener("click", sendChat);
-$("#chatInput").addEventListener("keydown", e => { if(e.key === "Enter") sendChat(); });
-
-/* ============ PRESENCE ============ */
-async function refreshPresence(){
-  try{
-    const pres = await fbGet(PATH_OWNER);
-    const online = !!(pres && pres.online && (Date.now()-(pres.lastSeen||0) < 60000));
-    const dot = $("#chatOnlineDot"), txt = $("#chatOnlineText");
-    if(dot && txt){
-      dot.className = "pulse-dot " + (online ? "green" : "red");
-      txt.textContent = online ? "Owner Online" : "Owner Offline";
-    }
+    $("#tarikTuj").value = `${user.wallet} · ${user.nomorRekening}`;
   }catch(e){}
 }
 
-/* ============ NAVIGATION ============ */
-let activeView = "overview";
-const PAGE_META = {
-  overview:{title:"Overview", sub:"Ringkasan aktivitas dan pendapatan"},
-  pendapatan:{title:"Pendapatan", sub:"Rincian penghasilan"},
-  whatsapp:{title:"WhatsApp", sub:"Status koneksi dan detail akun"},
-  pairing:{title:"Pairing", sub:"Sambungkan WhatsApp ke sistem"},
-  chat:{title:"Chat Owner", sub:"Komunikasi dengan owner"},
-  riwayat:{title:"Riwayat", sub:"Timeline aktivitas"},
-  pengaturan:{title:"Pengaturan", sub:"Kelola akun"}
+function renderRef(){
+  const link = `${window.location.origin}${window.location.pathname.replace("dashboard.html","")}index.html?ref=${encodeURIComponent(user.username)}`;
+  $("#refCode").textContent = user.referralCode || "-";
+  $("#refLink").textContent = link;
+  $("#refCnt").innerHTML = `${Number(user.referralCount)||0} <small>orang</small>`;
+  $("#refErn").textContent = "Rp " + fmt(Number(user.referralEarnings)||0);
+  $("#btnCopyRef").onclick = () => navigator.clipboard.writeText(link).then(()=>toast("Link disalin")).catch(()=>toast("Gagal"));
+}
+
+function renderRekeningForm(){
+  $("#rekNama").value = user.namaRekening || "";
+  $("#rekNomor").value = user.nomorRekening || "";
+  $("#rekWallet").value = user.wallet || "DANA";
+}
+
+$("#rekForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const nama = $("#rekNama").value.trim();
+  const nomor = $("#rekNomor").value.trim();
+  const wallet = $("#rekWallet").value;
+  if(nama.length < 3 || nomor.length < 5){ toast("Data tidak valid"); return; }
+  try{
+    await fbPatch(`/users/${uName}`, { namaRekening: nama, nomorRekening: nomor, wallet });
+    toast("Data tersimpan");
+    loadUser();
+  }catch(e){ toast("Gagal simpan"); }
 };
 
-function switchView(view){
-  activeView = view;
-  $$(".nav-link").forEach(l => l.classList.toggle("active", l.dataset.view === view));
-  $$(".view").forEach(v => v.classList.remove("active"));
-  const t = $("#view-" + view);
-  if(t){ t.classList.add("active"); t.style.animation = "none"; void t.offsetWidth; t.style.animation = ""; }
-  $("#pageTitle").textContent = PAGE_META[view]?.title || "Dashboard";
-  $("#pageSub").textContent = PAGE_META[view]?.sub || "";
-  window.scrollTo({top:0, behavior:"smooth"});
-  if(window.innerWidth <= 900) closeSidebar();
+$("#tarikAmt").addEventListener("input", (e) => {
+  const v = parseInt(e.target.value) || 0;
+  const net = Math.max(0, v - FEE);
+  $("#tarikNet").textContent = "Rp " + fmt(net);
+});
 
-  if(view === "chat"){
-    clearInterval(chatTimer);
+$("#tarikForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const amt = parseInt($("#tarikAmt").value) || 0;
+  if(amt < MIN_WD){ toast("Minimal Rp 15.000"); return; }
+  const avail = Math.floor(calcLive());
+  if(amt > avail){ toast("Saldo tidak cukup"); return; }
+  const btn = $("#btnTarik");
+  btn.disabled = true; btn.innerHTML = "Memproses...";
+  try{
+    const now = Date.now();
+    await fbPost("/withdrawals", {
+      username: uName,
+      amount: amt,
+      adminFee: FEE,
+      net: amt - FEE,
+      wallet: user.wallet,
+      nomorRekening: user.nomorRekening,
+      namaRekening: user.namaRekening,
+      status: "pending",
+      requestedAt: now,
+      notifiedToOwner: false
+    });
+    toast("Penarikan diajukan. Menunggu owner approve.");
+    $("#tarikAmt").value = "";
+    $("#tarikNet").textContent = "Rp 0";
+    renderWdHistory();
+  }catch(e){ toast("Gagal"); }
+  btn.disabled = false; btn.innerHTML = "Ajukan Penarikan";
+};
+
+async function loadChat(){
+  try{
+    const raw = await fbGet(`/chats/${uName}/messages`) || {};
+    const msgs = Object.values(raw).sort((a,b) => (a.at||0) - (b.at||0));
+    const body = $("#chatBody");
+    if(!msgs.length){ body.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Belum ada pesan</p></div>`; return; }
+    const wasBot = body.scrollHeight - body.scrollTop - body.clientHeight < 80;
+    body.innerHTML = msgs.map(m => `<div class="msg ${m.from === "user" ? "me" : "other"}">${esc(m.text)}<span class="time">${fmtT(m.at)}</span></div>`).join("");
+    if(wasBot) body.scrollTop = body.scrollHeight;
+  }catch(e){}
+}
+
+async function sendChat(){
+  const t = $("#chatIn").value.trim();
+  if(!t) return;
+  $("#chatIn").value = "";
+  try{
+    await fbPost(`/chats/${uName}/messages`, { from: "user", text: t, at: Date.now(), notifiedToOwner: false });
     loadChat();
-    chatTimer = setInterval(loadChat, 3000);
-    $("#badgeChat").classList.add("hidden");
-  } else clearInterval(chatTimer);
+  }catch(e){ toast("Gagal kirim"); }
+}
+$("#chatSend").onclick = sendChat;
+$("#chatIn").addEventListener("keydown", e => { if(e.key === "Enter") sendChat(); });
+
+async function refreshPresence(){
+  try{
+    const p = await fbGet("/owner/presence");
+    const on = !!(p?.online && (Date.now()-(p.lastSeen||0) < 60000));
+    const d = $("#chatDot"), t = $("#chatTxt");
+    if(d && t){ d.className = "pd " + (on ? "green" : "red"); t.textContent = on ? "Owner Online" : "Owner Offline"; }
+  }catch(e){}
+}
+
+const PAGE = {
+  overview:{t:"Overview",s:"Ringkasan akun"},
+  rekening:{t:"Rekening",s:"Kelola data pencairan"},
+  pairing:{t:"Pairing",s:"Sambungkan WhatsApp"},
+  tarik:{t:"Tarik Saldo",s:"Cairkan penghasilan"},
+  referral:{t:"Undang Teman",s:"Dapat Rp 500/orang"},
+  chat:{t:"Chat Owner",s:"Komunikasi dengan owner"}
+};
+
+function switchView(v){
+  activeView = v;
+  $$(".nl").forEach(l => l.classList.toggle("active", l.dataset.v === v));
+  $$(".view").forEach(x => x.classList.remove("active"));
+  const t = $("#view-" + v);
+  if(t){ t.classList.add("active"); }
+  $("#pt").textContent = PAGE[v]?.t || "Dashboard";
+  $("#ps").textContent = PAGE[v]?.s || "";
+  window.scrollTo({top:0, behavior:"smooth"});
+  if(window.innerWidth <= 900) closeSb();
+  clearInterval(chatT);
+  if(v === "chat"){ loadChat(); chatT = setInterval(loadChat, 3000); }
 }
 
 document.addEventListener("click", e => {
-  const link = e.target.closest(".nav-link");
-  if(link && link.dataset.view){
-    e.preventDefault();
-    switchView(link.dataset.view);
-  }
+  const l = e.target.closest(".nl");
+  if(l){ e.preventDefault(); switchView(l.dataset.v); }
 });
 
-$("#menuToggle").addEventListener("click", () => {
-  $("#sidebar").classList.toggle("open");
-  $("#sidebarBackdrop").classList.toggle("show");
-});
-$("#sidebarBackdrop").addEventListener("click", closeSidebar);
-function closeSidebar(){
-  $("#sidebar").classList.remove("open");
-  $("#sidebarBackdrop").classList.remove("show");
-}
+$("#menuTgl").onclick = () => { $("#sidebar").classList.toggle("open"); $("#sbBd").classList.toggle("show"); };
+$("#sbBd").onclick = closeSb;
+function closeSb(){ $("#sidebar").classList.remove("open"); $("#sbBd").classList.remove("show"); }
 
-$("#sbLogout").addEventListener("click", () => {
-  if(!confirm("Keluar dari dashboard?")) return;
-  localStorage.removeItem("nexa_reg_id");
-  sessionStorage.removeItem("nexa_reg_id");
-  window.location.href = "index.html";
-});
+$("#sbOut").onclick = () => { if(confirm("Keluar?")){ localStorage.removeItem("nexa_username"); window.location.href = "index.html"; } };
 
-/* ============ INIT ============ */
-(async function init(){
-  if(!regId){
-    window.location.href = "index.html";
-    return;
-  }
-  setLoader("loading");
-  await loadReg();
-  startTicker();
+(async function(){
+  if(!uName){ window.location.href = "index.html"; return; }
+  await loadUser();
+  if(!user) return;
+  tickT = setInterval(tick, 1000);
+  pollT = setInterval(loadUser, 5000);
   refreshPresence();
-  setLoader("done");
-
   setInterval(refreshPresence, 12000);
-  pollTimer = setInterval(() => { loadReg().catch(()=>{}); }, POLL_MS);
-  setInterval(() => {
-    if(regData?.waStatus === "disconnected"){
-      $("#badgePairing").classList.remove("hidden");
-    } else {
-      $("#badgePairing").classList.add("hidden");
-    }
-  }, 3000);
+  if(location.hash === "#pairing") switchView("pairing");
 })();
 </script>
 </body>
