@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#05070f">
+<title>NexaPartner — Daftar Mitra Sewa WhatsApp</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f;--text:#eef1f8;--muted:#7d869e;--stroke:rgba(255,255,255,.07);
+  --accent:#6d5efc;--accent-2:#00d4ff;--gold:#ffb020;--green:#22c55e;--red:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:22px;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(1100px 600px at 15% -10%, rgba(109,94,252,.22), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(0,212,255,.12), transparent 55%),
+    radial-gradient(800px 600px at 50% 115%, rgba(255,176,32,.08), transparent 60%),#05070f}
+.bg::after{content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 72%);
+  mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 72%)}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);z-index:-1;pointer-events:none;opacity:.4}
+.orb-1{width:460px;height:460px;background:#5a45f0;top:-160px;left:-120px;animation:f1 18s ease-in-out infinite}
+.orb-2{width:380px;height:380px;background:#00b8e6;top:20%;right:-140px;animation:f2 22s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,50px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,40px)}}
+
+.card{width:100%;max-width:520px;padding:34px 30px;border-radius:24px;
+  background:linear-gradient(160deg,rgba(23,25,40,.94),rgba(11,12,20,.98));
+  border:1px solid var(--stroke);position:relative;
+  box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 40px 80px -34px rgba(0,0,0,1),
+    0 0 80px -40px rgba(109,94,252,.5);
+  animation:up .5s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes up{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.card::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent)}
+
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.brand-mark{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(160deg,#7b6bff,#4a37e0 55%,#2a1d9e);color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 12px 26px -10px rgba(109,94,252,.95)}
+.brand-mark svg{width:23px;height:23px}
+.brand-name{font-size:16px;font-weight:800;letter-spacing:.2px}
+.brand-name span{color:var(--accent-2)}
+.brand-tag{font-size:10.5px;color:var(--muted);font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-top:1px}
+
+h1{font-size:24px;font-weight:800;letter-spacing:-.6px;margin-bottom:6px}
+h1 span{background:linear-gradient(100deg,#8b7bff,#00d4ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);font-size:13px;margin-bottom:24px;line-height:1.6}
+
+.field{margin-bottom:15px}
+.field label{display:block;font-size:11px;font-weight:800;color:#a9b2c7;margin-bottom:8px;
+  letter-spacing:.4px;text-transform:uppercase}
+.field input,.field select{width:100%;padding:13px 16px;font-family:inherit;font-size:14px;
+  font-weight:600;color:var(--text);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid var(--stroke);border-radius:12px;outline:none;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.5);transition:.2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d869e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 16px center;padding-right:44px;cursor:pointer}
+.field select option{background:#12141f;color:#eef1f8}
+.field input::placeholder{color:#5c6478;font-weight:500}
+.field input:focus,.field select:focus{border-color:rgba(109,94,252,.75);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.5),0 0 0 3px rgba(109,94,252,.15)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer;margin:14px 0 4px}
+.check input{position:absolute;opacity:0}
+.check .box{width:20px;height:20px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);transition:.2s}
+.check .box svg{width:12px;height:12px;color:#fff;opacity:0;transition:.2s}
+.check input:checked+.box{background:linear-gradient(160deg,#7b6bff,#4a37e0);border-color:transparent}
+.check input:checked+.box svg{opacity:1}
+.check span{font-size:12px;color:var(--muted);line-height:1.55}
+.check span b{color:#cfd6e6}
+
+.btn{width:100%;margin-top:20px;padding:15px 24px;border:none;border-radius:13px;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:800;color:#fff;
+  background:linear-gradient(180deg,#7f6fff,#5a45f0 55%,#4a34dd);
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 -2px 0 rgba(0,0,0,.25) inset,
+    0 12px 24px -8px rgba(109,94,252,.95);
+  transition:.2s;display:flex;align-items:center;justify-content:center;gap:9px}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn svg{width:16px;height:16px}
+.spinner{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.err{color:#ff7b7b;font-size:11px;font-weight:700;margin-top:5px;display:none}
+.field.invalid input,.field.invalid select{border-color:rgba(239,68,68,.6)}
+.field.invalid .err{display:block}
+
+.success{text-align:center;padding:16px 0}
+.success-ico{width:72px;height:72px;margin:0 auto 18px;border-radius:22px;display:grid;place-items:center;
+  background:linear-gradient(160deg,rgba(34,197,94,.22),rgba(34,197,94,.05));
+  border:1px solid rgba(34,197,94,.35);color:#4ade80;
+  box-shadow:0 0 44px -12px rgba(34,197,94,.9)}
+.success-ico svg{width:34px;height:34px}
+.success h2{font-size:20px;font-weight:800;margin-bottom:8px}
+.success p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:20px}
+.ticket{padding:14px 18px;border-radius:14px;background:rgba(255,255,255,.03);
+  border:1px solid var(--stroke);text-align:left;margin-bottom:16px}
+.ticket .row{display:flex;justify-content:space-between;padding:6px 0;font-size:12.5px;gap:10px}
+.ticket .row span{color:var(--muted);font-weight:600}
+.ticket .row b{font-weight:700;text-align:right;word-break:break-all}
+
+.hidden{display:none!important}
+.mono{font-family:'JetBrains Mono',monospace}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140%);z-index:200;
+  display:flex;align-items:center;gap:10px;padding:13px 20px;border-radius:13px;
+  font-size:12.5px;font-weight:700;color:#fff;background:rgba(18,22,38,.96);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 20px 40px -14px rgba(0,0,0,1);
+  transition:transform .4s cubic-bezier(.2,.9,.3,1.2);max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+.toast svg{width:16px;height:16px;flex:0 0 auto}
+.toast.ok svg{color:#6ee7a0}
+.toast.err svg{color:#ff9a9a}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="card" id="card">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">NEXA<span>PARTNER</span></div>
+      <div class="brand-tag">Sewa WhatsApp Network</div>
+    </div>
+  </div>
+
+  <div id="formSection">
+    <h1>Daftar <span>Mitra</span></h1>
+    <p class="sub">Lengkapi data dengan benar. Setelah terdaftar, Anda langsung diarahkan ke dashboard.</p>
+
+    <form id="regForm" novalidate autocomplete="off">
+      <div class="field">
+        <label>Nama Sesuai Rekening / E-Wallet</label>
+        <input type="text" id="pemilik" placeholder="Nama lengkap sesuai rekening" maxlength="60">
+        <div class="err">Nama minimal 3 karakter</div>
+      </div>
+
+      <div class="field">
+        <label>Nomor WhatsApp Aktif</label>
+        <input type="tel" id="wa" placeholder="08xxxxxxxxxx" inputmode="numeric" maxlength="18">
+        <div class="err">Nomor WhatsApp tidak valid</div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>Metode Pencairan</label>
+          <select id="dompet">
+            <option value="">Pilih</option>
+            <option>DANA</option>
+            <option>OVO</option>
+            <option>GoPay</option>
+            <option>ShopeePay</option>
+            <option>Rekening Bank</option>
+          </select>
+          <div class="err">Pilih metode</div>
+        </div>
+        <div class="field">
+          <label id="lblNomor">Nomor Tujuan</label>
+          <input type="text" id="nomor" placeholder="08xxxx" maxlength="30">
+          <div class="err">Nomor tidak valid</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Usia Akun WhatsApp</label>
+        <select id="usia">
+          <option value="">Pilih usia</option>
+          <option>Kurang dari 1 bulan</option>
+          <option>1 - 3 bulan</option>
+          <option>3 - 6 bulan</option>
+          <option>Lebih dari 6 bulan</option>
+        </select>
+        <div class="err">Pilih usia akun</div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="setuju">
+        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m20 6L9 17l-5-5"/></svg></span>
+        <span>Data yang saya isi <b>benar dan valid</b>, serta setuju dengan syarat &amp; ketentuan program.</span>
+      </label>
+
+      <button type="submit" class="btn" id="btnSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg>
+        <span>Daftar Sekarang</span>
+      </button>
+    </form>
+  </div>
+
+  <div id="successSection" class="success hidden">
+    <div class="success-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+      </svg>
+    </div>
+    <h2>Pendaftaran Berhasil</h2>
+    <p>Anda akan diarahkan ke dashboard dalam <b id="cd">3</b> detik...</p>
+    <div class="ticket" id="ticket"></div>
+    <button class="btn" onclick="goDashboard()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      <span>Buka Dashboard Sekarang</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+  <span id="toastMsg">Berhasil</span>
+</div>
+
+<script>
+const FIREBASE_URL = "https://webb-caab0-default-rtdb.firebaseio.com";
+const PATH_REG     = "/registrations";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const normPhone = v => {
+  let d = String(v||"").replace(/\D/g,"");
+  if(d.startsWith("0")) d = "62" + d.slice(1);
+  else if(d.startsWith("8")) d = "62" + d;
+  return d;
+};
+
+function toast(msg, type="ok"){
+  const el = $("#toast");
+  $("#toastMsg").textContent = msg;
+  el.classList.toggle("ok", type==="ok");
+  el.classList.toggle("err", type==="err");
+  el.querySelector("svg").innerHTML = type==="ok"
+    ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>'
+    : '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>';
+  el.classList.add("show");
+  clearTimeout(window.__t);
+  window.__t = setTimeout(()=>el.classList.remove("show"), 2800);
+}
+
+async function fbPost(p, d){
+  const r = await fetch(`${FIREBASE_URL}${p}.json`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(d)
+  });
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+
+function goDashboard(){
+  window.location.href = "dashboard.html";
+}
+
+$("#dompet").addEventListener("change", e => {
+  const isBank = e.target.value === "Rekening Bank";
+  $("#lblNomor").textContent = isBank ? "Nomor Rekening" : "Nomor Tujuan";
+  $("#nomor").placeholder = isBank ? "1234567890" : "08xxxxxxxxxx";
+});
+
+document.querySelectorAll("#regForm input, #regForm select").forEach(el => {
+  const clear = () => el.closest(".field")?.classList.remove("invalid");
+  el.addEventListener("input", clear);
+  el.addEventListener("change", clear);
+});
+
+function setInvalid(el, bad){
+  el.closest(".field")?.classList.toggle("invalid", bad);
+  return !bad;
+}
+
+$("#regForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#btnSubmit");
+  const pemilik = $("#pemilik").value.trim();
+  const wa = $("#wa").value.trim();
+  const dompet = $("#dompet").value;
+  const nomor = $("#nomor").value.trim();
+  const usia = $("#usia").value;
+  const setuju = $("#setuju").checked;
+
+  let valid = true;
+  valid = setInvalid($("#pemilik"), pemilik.length < 3) && valid;
+  valid = setInvalid($("#wa"), normPhone(wa).length < 10 || normPhone(wa).length > 15) && valid;
+  valid = setInvalid($("#dompet"), !dompet) && valid;
+  valid = setInvalid($("#nomor"), nomor.length < 5) && valid;
+  valid = setInvalid($("#usia"), !usia) && valid;
+  valid = setInvalid($("#setuju"), !setuju) && valid;
+
+  if(!valid){ toast("Periksa kembali data", "err"); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span><span>Mengirim...</span>';
+
+  const now = Date.now();
+  const payload = {
+    nama: pemilik,
+    pemilik: pemilik,
+    wa: wa,
+    waNormalized: normPhone(wa),
+    dompet: dompet,
+    nomor: nomor,
+    usiaAkun: usia,
+    status: "Menunggu",
+    waStatus: "none",
+    botStarted: false,
+    botStopped: false,
+    totalEarned: 0,
+    totalWithdrawn: 0,
+    createdAt: now,
+    createdAtText: new Date(now).toLocaleString("id-ID")
+  };
+
+  try{
+    const res = await fbPost(PATH_REG, payload);
+    const regId = res.name;
+    localStorage.setItem("nexa_reg_id", regId);
+    sessionStorage.setItem("nexa_reg_id", regId);
+
+    $("#formSection").classList.add("hidden");
+    $("#successSection").classList.remove("hidden");
+    $("#ticket").innerHTML = `
+      <div class="row"><span>ID Pendaftaran</span><b class="mono">#${esc(String(regId).slice(-8).toUpperCase())}</b></div>
+      <div class="row"><span>Nama Rekening</span><b>${esc(pemilik)}</b></div>
+      <div class="row"><span>WhatsApp</span><b>${esc(wa)}</b></div>
+      <div class="row"><span>Pencairan</span><b>${esc(dompet)}</b></div>
+    `;
+    toast("Pendaftaran berhasil", "ok");
+
+    let cd = 3;
+    const timer = setInterval(() => {
+      cd--;
+      const el = $("#cd");
+      if(el) el.textContent = cd;
+      if(cd <= 0){ clearInterval(timer); goDashboard(); }
+    }, 1000);
+
+  } catch(err){
+    console.error(err);
+    toast("Gagal mengirim. Cek koneksi.", "err");
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg><span>Daftar Sekarang</span>';
+  }
+});
+
+// Auto-redirect if already registered
+(function(){
+  const existing = localStorage.getItem("nexa_reg_id");
+  if(existing){
+    fetch(`${FIREBASE_URL}${PATH_REG}/${existing}.json`)
+      .then(r => r.json())
+      .then(data => { if(data) window.location.href = "dashboard.html"; })
+      .catch(() => {});
+  }
+})();
+</script>
+</body>
+</html>
